@@ -1,6 +1,6 @@
 # hello_world
 
-FIXME: description
+a hello world example of clojure, get some json data, read them, process them, append some stuff to it and write it to a local file
 
 ## Installation
 
