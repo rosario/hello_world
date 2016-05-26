@@ -5,38 +5,25 @@
   (:gen-class))
 
 (defn get-data []
-  (let [url "https://randomuser.me/api"]
-      (parse-string
-        (:body (client/get url)) true)))
+  (let [url "https://randomuser.me/api"
+        body (:body (client/get url))]
+      (parse-string body true)))
 
 (defn userdata [data]
   (first (:results data)))
 
-(defn user-gender [data]
-  (:gender data))
-
-(defn all-genders [data]
-  (map user-gender data))
-
-(defn count-genders [genders]
-  (frequencies genders))
-
-(defn people []
+(defn create-people []
   (repeatedly 10 #(userdata (get-data))))
 
 (defn prepare-data []
-  (let [persons (people)]
+  (let [persons (create-people)
+        all-genders (map :gender persons)]
     (assoc
       {}
       :data persons
-      :genders (count-genders (all-genders persons)))))
+      :genders (frequencies all-genders))))
 
-(defn to-json []
-  (generate-string (prepare-data)))
-
-(defn write-data []
-  (spit "output.txt" (to-json)))
 
 (defn -main
   [& args]
-  (write-data))
+  (spit "output.txt" (generate-string (prepare-data))))
